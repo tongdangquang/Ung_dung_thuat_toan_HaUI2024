@@ -1,0 +1,75 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct Hang {
+	float s;
+	float m;
+};
+
+void sort_klg(vector<Hang>& d, int left, int right) {
+	if (left >= right)	return;
+	int i = left, j = right;
+	float pivot = d[(left + right) / 2].m;
+	while (i <= j) {
+		while (d[i].m > pivot)	i++;
+		while (d[j].m < pivot)	j--;
+		if (i <= j) {
+			swap(d[i], d[j]);
+			i++;
+			j--;
+		}
+	}
+	sort_klg(d, left, j);
+	sort_klg(d, i, right);
+}
+
+void A5(vector<Hang>& v, vector<Hang> d, int n, float k, float& max_value) {
+	int i = 0;
+	max_value = 0;
+	while (k > 0 && i < n) {
+		if (k >= d[i].s) {
+			v.push_back(d[i]);
+			max_value += d[i].m;
+			k -= d[i].s;
+		}
+		i++;
+	}
+}
+
+void printAns(vector<Hang> v) {
+	cout << "s\t" << "m" << endl;
+	for (int i = 0; i < v.size(); i++) {
+		cout << v[i].s << "\t" << v[i].m << endl;
+	}
+	cout << endl;
+}
+
+
+int main() {
+	float k = 11;
+	int n = 6;
+	vector<Hang> d;
+	d.push_back({ 4, 4});
+	d.push_back({ 3.5, 1});
+	d.push_back({ 3, 2});
+	d.push_back({ 3, 3});
+	d.push_back({ 2.5, 3 });
+	d.push_back({ 2, 2.5 });
+
+	cout << "Danh sach hang:" << endl;
+	printAns(d);
+
+	sort_klg(d, 0, n - 1);
+	float max_value = 0;
+	vector<Hang> v;
+	A5(v, d, n, k, max_value);
+	int u = v.size();
+	if (u) {
+		cout << "Co the cho toi da so hang la: " << u << endl;
+		printAns(v);
+		cout << "Max_value = " << max_value << endl;
+	}
+	else cout << "Khong cho duoc bat ki hang nao" << endl;
+	return 0;
+}
